@@ -1,22 +1,16 @@
 # TokenFight.lol
 
-**TokenFight.lol** is a fully on-chain, asynchronous, turn-based strategy game built using the [MUD](https://mud.dev/introduction) framework. Players create and manage "bubbles" by fundraising ETH, acquiring strategic items, forming alliances, and competing for control over resource nodes. The game leverages smart contracts to ensure transparency, fairness, and decentralization, offering a rich and immersive strategic experience.
+**TokenFight.lol** is a fully on-chain, asynchronous strategy game built using the [MUD](https://mud.dev/introduction) framework where players launch tokens and battle them against eachother on a 2D grid to generate money for their shareholders.
 
----
 
 ## Table of Contents
 
 1. [Game Overview](#game-overview)
 2. [Core Concepts](#core-concepts)
-    - [Entities and Components](#entities-and-components)
-    - [Turns and Actions](#turns-and-actions)
+    - [Spawning Tokens](#spawning-tokens)
+    - [Turns](#turns)
     - [ETH and Resources](#eth-and-resources)
-    - [Alliances and Transfers](#alliances-and-transfers)
-3. [Fundraising Mechanics](#fundraising-mechanics)
-    - [Initiating a Fundraiser](#initiating-a-fundraiser)
-    - [Buying Shares](#buying-shares)
-    - [Spawning Bubbles](#spawning-bubbles)
-    - [Tokenomics and Fund Distribution](#tokenomics-and-fund-distribution)
+    - [Items](#items)
 4. [Bubble Lifecycle](#bubble-lifecycle)
     - [Bubble Creation](#bubble-creation)
     - [Bubble Actions](#bubble-actions)
@@ -38,7 +32,6 @@
 8. [Turn Mechanics](#turn-mechanics)
     - [Planning Phase](#planning-phase)
     - [Execution Phase](#execution-phase)
-9. [Alliance Mechanics](#alliance-mechanics)
 10. [Vulnerability and Counterplay](#vulnerability-and-counterplay)
 11. [Bubble Positioning Logic](#bubble-positioning-logic)
 12. [Edge Cases and Security](#edge-cases-and-security)
@@ -49,18 +42,11 @@
 
 ## Game Overview
 
-**TokenFight.lol** is a decentralized strategy game where players compete by managing bubbles on an infinite 2D canvas. Each bubble is an entity that can move, attack, defend, and interact with other bubbles and resource nodes. The game emphasizes strategic planning, resource management, and tactical item usage, all governed by transparent smart contracts to ensure a fair and decentralized gaming environment.
+**TokenFight.lol** is a fully on-chain, asynchronous, strategy game where players launch tokens and battle them against each other for real ETH and generate money for their shareholders.
 
 
 ## Core Concepts
 
-### Entities and Components
-
-**Entities:**  
-Entities represent all game objects, including players, bubbles, items, and resource nodes. Each entity is uniquely identified and can have multiple components attached to it.
-
-**Components:**  
-Components store data related to entities. They are immutable structures that define the state of an entity. Examples include `PositionComponent`, `BubbleComponent`, `InventoryComponent`, and `ResourceNodeComponent`.
 
 ### Turns and Actions
 
