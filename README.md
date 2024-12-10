@@ -85,6 +85,11 @@ When there are multiple attackers responsible for dealing damage to a single pla
 **Defense:**  
 Defense (activated primarily by shields) reduces the percentage of damage dealt in a given turn. Shields can be compounded upon each other endlessly (by your self and allies). To protect against potential enemy attacks.
 
+### ETH Faucets
+
+For every 10 tokens spawns 1 ETH Faucet. Every otherturn each faucet emits a certain amount of ETH from it. If a player is ontop of a faucet, the emission goes directly to the player's treasury, otherwise it is emitted to the nearest free cell on the map. The ETH emitted can be picked up by any player.
+The amount of ETH emitted by a faucet is determined by the PROTOCOL_REVENUE_PREV_10_TURNS/(TOTAL_FAUCETS * 10).
+
 
 ### Token Lifecycle
 
@@ -93,3 +98,16 @@ When a token's treasury is depleted to MIN_ETH_TO_SURVIVE, the token is removed 
 
 **Expiration:**
 When a token's expiration date is reached, the token is removed from the game. All ETH within the token's treasury can now be claimed by the shareholders by redeeming (burning) their tokens in return for ETH. ETH within the treasury is evenly distributed to shareholders based on the amount of tokens they hold. Users can also choose to continue trading their tokens instead of redeeming them for the ETH within the treasury.
+
+
+
+## Protocol Revenue
+
+Protocol revenue is generated from the following sources:
+
+1. **Trading Fees:**  
+   A 1% fee is charged on all trades. This fee is split between the protocol and the token creator.
+2. **Movement Fees:**
+    All movement fees are deposited directly into the protocol.
+3. **Ejection Fees:**
+    When a player ejects ETH or items onto the map the cost to move that asset/ETH (based on the weight of the asset/ETH) is deposited into the protocol.
