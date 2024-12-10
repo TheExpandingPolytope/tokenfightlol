@@ -9,35 +9,9 @@
 2. [Core Concepts](#core-concepts)
     - [Spawning Tokens](#spawning-tokens)
     - [Turns](#turns)
-    - [ETH and Resources](#eth-and-resources)
+    - [Actions](#actions)
     - [Items](#items)
-4. [Bubble Lifecycle](#bubble-lifecycle)
-    - [Bubble Creation](#bubble-creation)
-    - [Bubble Actions](#bubble-actions)
-    - [Bubble Expiration](#bubble-expiration)
-5. [Items and Their Mechanics](#items-and-their-mechanics)
-    - [Missile](#missile)
-    - [Stun Gun](#stun-gun)
-    - [Shield](#shield)
-    - [Teleport](#teleport)
-    - [Bomb](#bomb)
-    - [Range Amplifier](#range-amplifier)
-6. [Economic Flow](#economic-flow)
-    - [Bonding Curves](#bonding-curves)
-    - [Protocol Fees](#protocol-fees)
-    - [Liquidity Pools](#liquidity-pools)
-7. [Resource Nodes](#resource-nodes)
-    - [ETH Generation](#eth-generation)
-    - [Revenue Redistribution](#revenue-redistribution)
-8. [Turn Mechanics](#turn-mechanics)
-    - [Planning Phase](#planning-phase)
-    - [Execution Phase](#execution-phase)
-10. [Vulnerability and Counterplay](#vulnerability-and-counterplay)
-11. [Bubble Positioning Logic](#bubble-positioning-logic)
-12. [Edge Cases and Security](#edge-cases-and-security)
-13. [Frontend Integration](#frontend-integration)
-14. [Future Extensions](#future-extensions)
-15. [Conclusion](#conclusion)
+    - [Damage and Defense](#damage-and-defense)
 
 
 ## Game Overview
@@ -47,158 +21,69 @@
 
 ## Core Concepts
 
+### Spawning Tokens
+
+Tokens are launched by creators by specifying a token name, ticker, image, and description and expiration date. The token is then traded along a bonding curve and once its market cap reaches X ETH (and supply 800m) it transitions to a Uniswap v3 pool.
+X/2 ETH and 200m tokens are minted and deposited into the liquidity pool.
+While the other half of ETH is deposited into the tokens in-game treasury and is used to pay for actions taken by the creator.
+The token will then spawn at a random location on the map in the next 2 turns.
+And can begin battling other tokens on the map for ETH.
 
 ### Turns and Actions
 
 **Turns:**  
-The game progresses in discrete turns. Each turn consists of two phases:
+The game progresses in turns. Each turn is 30 minutes long. Moves can be submitted at any time during the turn. When the turn ends, all moves are revealed and executed simultaneously. Token creators can only submit moves during their own turns. Every action costs real ETH that is taken from the token's treasury. Creators must manage their actions wisely, to ensure maximum profits for their shareholders at the time of the token's expiration.
 
 1. **Planning Phase:**  
-   Players submit their actions for the upcoming turn. Actions include moving, attacking, buying/selling items, etc.
+   Players submit their actions for the upcoming turn. Actions include moving, attacking, buying/selling items, etc. They have quite a bit of time to think about their actions and predict what others might do.
 
 2. **Execution Phase:**  
    All submitted actions are resolved simultaneously, updating the game state based on the interactions and outcomes of these actions.
 
 **Actions:**  
-Each bubble can perform one primary action per turn. Possible actions include:
+Each owner can perform one primary action per turn. Possible actions include:
 
-- **Move:** Change position on the map.
-- **Attack:** Use offensive items like Missiles or Stun Guns.
-- **Defend:** Activate Shields or other defensive measures.
-- **Buy/Sell Items:** Acquire or dispose of strategic items.
-- **Plant Bombs:** Place bombs on the map or on allies.
-- **Charge Range:** Prepare for extended-range actions.
-- **Teleport:** Relocate to a different position on the map.
+1. **Movement:**  
+   Change position on the map. Creators can move their token 1 unit per turn in any direction. Movement cost varies based on the weight of the token and the distance moved. Distance is measured in euclidean distance. You can move up to sqrt(2) units per turn (By default). Meaning 8 different directions (N, NE, E, SE, S, SW, W, NW). Diagonal moves cost more than orthogonal moves because they of euclidean calculations. COST_TO_MOVE_PER_UNIT = 1e-16 * WEIGHT_OF_TOKEN * DISTANCE_MOVED
+   The token's weight is determined by the total amount of ETH in the token's treasury + the weight of all the items within its inventory.
+   ETH spent on movement by all players is deposited into the protocol.
+2. **Buy/Sell Items:**  
+   Buy or sell an item from the in-game market. The in-game market is open to all players. Creators can buy/sell items for their token along a bonding curve. When a creator buys an item, the item arrives within their token's inventory in the next 2 turns. User's can buy/sell any amount of items at any time (during their turn). But can only sell items that have arrived within their inventory. A 1 fee exists on all trades that is deposited into the protocol. 
+   Trading can be another way to make profits for token creators (Economic warfare).
+3. **Use Items:**  
+   This is the core game play mechanic. Every item is completely unique. Some can be used to attack (Missile, Stun Gun, Bomb) and steal ETH from other tokens. Some can be used to defend (Shield) against attacks. Others can used be for positioning (Teleport). Or powering up (Range Amplifier). Each item has a different cooldown as well (More on items soon).
+4. **Eject:**  
+   Eject ETH or items onto the map or to nearby tokens. Maximum range of an eject is 2 units away. If a ETH or item is ejected to a place where another player's token is located, the ETH or item is transferred to the other player's token. This is a key way to engage in trades with other token creators. Otherwise the item is ejected to that point on the map to be picked up by the first player to move to that location. This can serve as a way to decrease your weight. Or even bait opponents into a trap. Ejection is cancelled if land on another object.
 
+### Items
 
-### ETH and Resources
+Items are the core game play mechanic. Each item is unique and has a different effect. Items can be used to attack, defend, or position. Some items have a cooldown.
+Here is a list of all the items and their mechanics:
 
-**ETH:**  
-Ethereum's native cryptocurrency, ETH, serves as the primary resource in the game. Players use ETH to:
-
-- Move their bubbles.
-- Buy and sell items.
-- Contribute to fundraisers.
-- Perform actions requiring ETH costs.
-
-**Resource Nodes:**  
-Fixed points on the map that generate ETH each turn. Control over resource nodes provides a steady income of ETH, enhancing a bubble's treasury.
-
-### Alliances and Transfers
-
-**Alliances:**  
-Alliances are purely social agreements between players. They are not enforced on-chain, allowing players to collaborate, share resources, and strategize together without smart contract enforcement.
-
-**Transfers:**  
-Players can transfer ETH or items to their allies as part of their strategy. This enables cooperative tactics, such as shielding allies or delivering bombs through coordinated movements.
-
-
-## Fundraising Mechanics
-
-### Initiating a Fundraiser
-
-**Function:** `startFundraise(targetAmount, tokenName, tokenSymbol, tokenDecimals)`
-
-**Description:**  
-Allows a player to start a new fundraising campaign to spawn a bubble.
-
-**Inputs:**
-
-- `targetAmount` (uint256): The total ETH required to successfully spawn the bubble.
-- `tokenName` (string): The name of the ERC20 token representing shares (e.g., "BubbleShares").
-- `tokenSymbol` (string): The symbol for the ERC20 token (e.g., "BUB").
-- `tokenDecimals` (uint8): Typically set to 18 for ETH alignment.
-
-**Process:**
-
-1. **Deploy ERC20 Token:**
-   - A new ERC20 token is created with the specified parameters.
-   - The fundraising mechanism is set up to mint new tokens as shares are purchased.
-
-2. **Create Fundraiser Entity:**
-   - An entity representing the fundraiser is established.
-   - The fundraiser's goals and parameters are defined, including the target amount and share conversion rate.
-
-3. **Emit Event:**
-   - An event is triggered to notify the system and users about the new fundraiser.
-
-**Example:**
-
-Start a fundraiser with a target of 1000 ETH, token name "BubbleShares", symbol "BUB", and 18 decimals.
+1. **Missile:**  
+   A missile is an item that be used to launch an attack on enemy tokens. By default a missile has a range of 4 units. And is launched at a specific point on the map. Launched can be trigger (at most) 4 turns into the future or immediately. If it successfully lands on a token, 1 DAMAGE is dealt to the token that was hit. If the enemy token dodges the missile (moves to a different point on the map) no damage is dealt. So when launching a missile you must predict the enemy's movement. Additionally, if the enemy activates a shield, the effects of 1 missile are negated. Zero cooldown (Can launch consecutively). Does 1 DAMAGE.
+2. **Bomb:**  
+   A bomb that explodes after a set amount of turns. By default a bomb has a range of 2 units. User must specify detonation time (minimum 2 turns max 10 turns) and planting location (planting can only happen instantly). If it comes into contact with a player token (self, ally or enemy) before detonation, the bomb will attach itself to the target (and follow them until detonation). Upon detonation the bomb will explode and deal 1 DAMAGE to all tokens within a 2 unit radius (as well as the token that is attached to the bomb). A bombs detonation can also be triggered early if damage is done to it prematurely. (from other bombs or a missile). Cooldown is 1 turns. Does 1 DAMAGE.
+3. **Stun Gun:**  
+   A stun gun is an item that can be used to stun an enemy token. By default a stun gun has a range of 2 units. And is launched at a specific point on the map. If it successfully lands on a token, the token is stunned for the next turn. If the enemy token dodges the stun gun (moves to a different point on the map) no damage is dealt. So when launching a stun gun you must predict the enemy's movement. Additionally, if an enemy activates a shield, the effect of the stun are reflected back on to the shooter. Cooldown is 3 turns.
+4. **Shield:**  
+   A shield is an item that can be used to defend against attacks and stuns. Shields can be trigger to act immediately (same turn) or 2 turns into the future (maximum). By default a shield has a cooldown of 1 turn. And can be used to defend against all attacks and stuns for one turn. Additionally, you can activate a shield on an ally that is 3 units away. Cooldown is 1 turn.
+5. **Teleport:**  
+   A teleport is an item that can be used to relocate the bubble to a different position on the map within a fixed range. User must specify the location and the turn they want to teleport at (minimum 2 turns max 10 turns). By default a teleport has a cooldown of 10 turns. And can be used to teleport to any location within a 10 unit radius. Upon arrival the player cannot make any actions for the next turn (stunned).
+6. **Range Amplifier:**  
+   A range amplifier is an item that can be used to increase the range of a missile or stun gun. By default a range amplifier has a cooldown of 10 turns. For every turn the range amplifier is charged, the range of all items (excluding teleport) is increased by 1 unit. Users cannot make any other actions while the range amplifier is charging. If any damage is taken while the range amplifier is charging, the charge is reset, cancelled, and player is stunned for the next turn.
 
 
-### Buying Shares
+### Damage and Defense
 
-**Function:** `buyShares(fundraiseEntityId) payable`
+**Damage:**  
+Units of damage are dealt by weapons. When units of damage are dealt, a percentage of the recipient's treasury is transferred to the attackers' treasury. Damage can be compounded upon each other by other players and yourself. Here is the formula:
+PERCENTAGE_ETH_TRANSFERRED = 1 / (1 + e^(-0.1 * DAMAGE_DEALT)).
+When there are multiple attackers responsible for dealing damage to a single player within the same turn, the eth transferred is split proportionally to the damage dealt by each attacker. For example, if the total damage dealt to a player is 4. Attacker 1 deals 1 unit of damage, Attacker 2 deals 2 units of damage, and Attacker 3 deals 1 unit of damage. Then Attacker 1 will receive 1/4th of the eth transferred, Attacker 2 will receive 2/4ths of the eth transferred, and Attacker 3 will receive 1/4th of the eth transferred.
 
-**Description:**  
-Allows players to contribute ETH to a fundraiser in exchange for ERC20 shares.
+**Defense:**  
+Defense (activated primarily by shields) reduces the percentage of damage dealt in a given turn. Shields can be compounded upon each other endlessly (by your self and allies). To protect against potential enemy attacks.
 
-**Inputs:**
-
-- `fundraiseEntityId` (uint256): The identifier of the fundraiser entity.
-- `msg.value` (uint256): The amount of ETH sent with the transaction.
-
-**Process:**
-
-1. **Validation:**
-   - Ensure the fundraiser is active and hasn't yet spawned a bubble.
-   - Confirm that the current total raised ETH is below the target amount.
-
-2. **Calculate Shares to Mint:**
-   - Determine the number of shares to mint based on the ETH contributed and the defined conversion rate.
-
-3. **Mint and Transfer Shares:**
-   - Mint the calculated number of ERC20 tokens to the contributor's address.
-
-4. **Update Fundraiser State:**
-   - Increment the total raised ETH by the contributed amount.
-
-5. **Emit Event:**
-   - Notify the system and users about the purchase of shares.
-
-**Example:**
-
-A contributor sends 1 ETH to buy 1000 shares if `sharesPerETH` is 1000.
-
-
-### Spawning Bubbles
-
-**Function:** `spawnBubble(fundraiseEntityId)`
-
-**Description:**  
-Finalizes a successful fundraiser by spawning a new bubble at a random location on the map.
-
-**Inputs:**
-
-- `fundraiseEntityId` (uint256): The identifier of the fundraiser entity.
-
-**Process:**
-
-1. **Validation:**
-   - Confirm that the total raised ETH meets or exceeds the target amount.
-   - Ensure that a bubble has not already been spawned for this fundraiser.
-
-2. **Request Randomness:**
-   - Use a reliable randomness source to obtain a random number for determining the bubble's spawn location.
-
-3. **Generate Coordinates:**
-   - Use the random number to generate `(x, y)` coordinates within a defined range.
-
-4. **Check Safe Distance:**
-   - Ensure that the new bubble's position is at least a minimum distance away from all existing bubbles to prevent overlap.
-
-5. **Finalize Spawn:**
-   - Create a new bubble entity with the determined safe `(x, y)` coordinates.
-   - Allocate ETH to the bubble’s treasury, liquidity pool, and protocol fees based on predefined percentages.
-   - Emit a `BubbleSpawned` event to notify the system of the new bubble.
-
-**Example:**
-
-After reaching 1000 ETH, spawn a bubble at coordinates (25000, -15000), ensuring it's not too close to existing bubbles.
-
-
-### Tokenomics and Fund Distribution
 
 **Upon Successful Fundraiser:**
 
