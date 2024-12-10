@@ -13,6 +13,9 @@
     - [Items](#items)
     - [Damage and Defense](#damage-and-defense)
     - [Bubble Lifecycle](#bubble-lifecycle)
+    - [ETH Faucets](#eth-faucets)
+    - [Token Lifecycle](#token-lifecycle)
+3. [Protocol Revenue](#protocol-revenue)
 
 
 ## Game Overview
