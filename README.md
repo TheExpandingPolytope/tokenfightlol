@@ -27,11 +27,7 @@
 
 ### Spawning Tokens
 
-Tokens are launched by creators by specifying a token name, ticker, image, and description and expiration date (in turns). The token is then traded along a bonding curve and once its market cap reaches X ETH (and supply 800m) it transitions to a Uniswap v3 pool.
-X/2 ETH and 200m tokens are minted and deposited into the liquidity pool.
-While the other half of ETH is deposited into the tokens in-game treasury and is used to pay for actions taken by the creator.
-The token will then spawn at a random location on the map in the next 2 turns.
-And can begin battling other tokens on the map for ETH.
+Tokens are launched by creators by specifying a token name, ticker, image, and description and expiration date (in turns). The token is then traded along a bonding curve and Once the token’s market cap reaches X ETH and the circulating supply hits 800 million, it transitions from the bonding curve to a Uniswap v3 pool. At this point, 20% of the ETH raised (0.2X) and a newly minted 50 million tokens are added to the liquidity pool. The remaining 80% (0.8X ETH) goes into the token’s in-game treasury, which the creator can spend on strategic actions. After 2 turns, the token appears at a random location on the map, ready to engage in battles with other tokens to earn additional ETH.
 
 ### Turns and Actions
 
