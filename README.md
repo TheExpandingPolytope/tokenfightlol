@@ -60,7 +60,7 @@ Each owner can perform one primary action per turn. Possible actions include:
 Items are the core game play mechanic. Each item is unique and has a different effect. Items can be used to attack, defend, or position. Some items have a cooldown.
 Here is a list of all the items and their mechanics:
 
-1. **Missile:**  
+1. **Rocket Launcher:**  
    A missile is an item that be used to launch an attack on enemy tokens. By default a missile has a range of 4 units. And is launched at a specific point on the map. Launched can be trigger (at most) 4 turns into the future or immediately. If it successfully lands on a token, 1 DAMAGE is dealt to the token that was hit. If the enemy token dodges the missile (moves to a different point on the map) no damage is dealt. So when launching a missile you must predict the enemy's movement. Additionally, if the enemy activates a shield, the effects of 1 missile are negated. Zero cooldown (Can launch consecutively). Does 1 DAMAGE.
 3. **Stun Gun:**  
    A stun gun is an item that can be used to stun an enemy token. By default a stun gun has a range of 2 units. And is launched at a specific point on the map. If it successfully lands on a token, the token is stunned for the next turn. If the enemy token dodges the stun gun (moves to a different point on the map) no damage is dealt. So when launching a stun gun you must predict the enemy's movement. Additionally, if an enemy activates a shield, the effect of the stun are reflected back on to the shooter. Cooldown is 3 turns.
@@ -68,6 +68,11 @@ Here is a list of all the items and their mechanics:
    A shield is an item that can be used to defend against attacks and stuns. Shields can be trigger to act immediately (same turn) or 2 turns into the future (maximum). By default a shield has a cooldown of 1 turn. And can be used to defend against all attacks and stuns for one turn. Additionally, you can activate a shield on an ally that is 3 units away. Cooldown is 1 turn.
 5. **Teleport:**  
    A teleport is an item that can be used to relocate the bubble to a different position on the map within a fixed range. User must specify the location and the turn they want to teleport at (minimum 2 turns max 10 turns). By default a teleport has a cooldown of 10 turns. And can be used to teleport to any location within a 10 unit radius. Upon arrival the player cannot make any actions for the next turn (stunned).
+   5. **Cloak:**  
+   A teleport is an item that can be used to relocate the bubble to a different position on the map within a fixed range. User must specify the location and the turn they want to teleport at (minimum 2 turns max 10 turns). By default a teleport has a cooldown of 10 turns. And can be used to teleport to any location within a 10 unit radius. Upon arrival the player cannot make any actions for the next turn (stunned).
+6. Sword
+7. Mine
+8. Radar
 
 ### Damage and Defense
 
