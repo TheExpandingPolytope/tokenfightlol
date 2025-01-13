@@ -27,7 +27,7 @@
 
 ### Spawning Tokens
 
-Tokens are launched by creators by specifying a token name, ticker, image, and description and expiration date (in turns). The token is then traded along a bonding curve and Once the token’s market cap reaches X ETH and the circulating supply hits 800 million, it transitions from the bonding curve to a Uniswap v3 pool. At this point, 20% of the ETH raised (0.2X) and a newly minted 50 million tokens are added to the liquidity pool. The remaining 80% (0.8X ETH) goes into the token’s in-game treasury, which the creator can spend on strategic actions. After 2 turns, the token appears at a random location on the map, ready to engage in battles with other tokens to earn additional ETH.
+Tokens are launched by creators by specifying a token name, ticker, image, and description. The token is then traded along a bonding curve and Once the token’s market cap reaches X ETH and the circulating supply hits 800 million, it transitions from the bonding curve to a Uniswap v3 pool. At this point, 20% of the ETH raised (0.2X) and a newly minted 50 million tokens are added to the liquidity pool. The remaining 80% (0.8X ETH) goes into the token’s in-game treasury, which the creator can spend on strategic actions. After 2 turns, the token appears at a random location on the map, ready to engage in battles with other tokens to earn additional ETH.
 
 ### Turns and Actions
 
@@ -62,17 +62,12 @@ Here is a list of all the items and their mechanics:
 
 1. **Missile:**  
    A missile is an item that be used to launch an attack on enemy tokens. By default a missile has a range of 4 units. And is launched at a specific point on the map. Launched can be trigger (at most) 4 turns into the future or immediately. If it successfully lands on a token, 1 DAMAGE is dealt to the token that was hit. If the enemy token dodges the missile (moves to a different point on the map) no damage is dealt. So when launching a missile you must predict the enemy's movement. Additionally, if the enemy activates a shield, the effects of 1 missile are negated. Zero cooldown (Can launch consecutively). Does 1 DAMAGE.
-2. **Bomb:**  
-   A bomb that explodes after a set amount of turns. By default a bomb has a range of 2 units. User must specify detonation time (minimum 2 turns max 10 turns) and planting location (planting can only happen instantly). If it comes into contact with a player token (self, ally or enemy) before detonation, the bomb will attach itself to the target (and follow them until detonation). Upon detonation the bomb will explode and deal 1 DAMAGE to all tokens within a 2 unit radius (as well as the token that is attached to the bomb). A bombs detonation can also be triggered early if damage is done to it prematurely. (from other bombs or a missile). Cooldown is 1 turns. Does 1 DAMAGE.
 3. **Stun Gun:**  
    A stun gun is an item that can be used to stun an enemy token. By default a stun gun has a range of 2 units. And is launched at a specific point on the map. If it successfully lands on a token, the token is stunned for the next turn. If the enemy token dodges the stun gun (moves to a different point on the map) no damage is dealt. So when launching a stun gun you must predict the enemy's movement. Additionally, if an enemy activates a shield, the effect of the stun are reflected back on to the shooter. Cooldown is 3 turns.
 4. **Shield:**  
    A shield is an item that can be used to defend against attacks and stuns. Shields can be trigger to act immediately (same turn) or 2 turns into the future (maximum). By default a shield has a cooldown of 1 turn. And can be used to defend against all attacks and stuns for one turn. Additionally, you can activate a shield on an ally that is 3 units away. Cooldown is 1 turn.
 5. **Teleport:**  
    A teleport is an item that can be used to relocate the bubble to a different position on the map within a fixed range. User must specify the location and the turn they want to teleport at (minimum 2 turns max 10 turns). By default a teleport has a cooldown of 10 turns. And can be used to teleport to any location within a 10 unit radius. Upon arrival the player cannot make any actions for the next turn (stunned).
-6. **Range Amplifier:**  
-   A range amplifier is an item that can be used to increase the range of a missile or stun gun. By default a range amplifier has a cooldown of 10 turns. For every turn the range amplifier is charged, the range of all items (excluding teleport) is increased by 1 unit. Users cannot make any other actions while the range amplifier is charging. If any damage is taken while the range amplifier is charging, the charge is reset, cancelled, and player is stunned for the next turn.
-
 
 ### Damage and Defense
 
@@ -86,7 +81,7 @@ Defense (activated primarily by shields) reduces the percentage of damage dealt 
 
 ### ETH Faucets
 
-For every 10 tokens spawns 1 ETH Faucet. Every otherturn each faucet emits a certain amount of ETH from it. If a player is ontop of a faucet, the emission goes directly to the player's treasury, otherwise it is emitted to the nearest free cell on the map. The ETH emitted can be picked up by any player.
+For every 10 tokens spawns 1 ETH Faucet. Eth faucets are located at the center of every 50X50 squares on the map. Every otherturn each faucet emits a certain amount of ETH from it. If a player is ontop of a faucet, the emission goes directly to the player's treasury, otherwise it is emitted to the nearest free cell on the map. The ETH emitted can be picked up by any player.
 The amount of ETH emitted by a faucet is determined by the PROTOCOL_REVENUE_PREV_10_TURNS/(TOTAL_FAUCETS * 10).
 
 
@@ -95,9 +90,7 @@ The amount of ETH emitted by a faucet is determined by the PROTOCOL_REVENUE_PREV
 **Death:** 
 When a token's treasury is depleted to MIN_ETH_TO_SURVIVE, the token is removed from the game. All ETH in the token's treasury is transferred to the attacker's treasury. No actions can be taken by a user to deplete its own treasury to <= MIN_ETH_TO_SURVIVE.
 
-**Expiration:**
-When a token's expiration date is reached, the token is removed from the game. All ETH within the token's treasury can now be claimed by the shareholders by redeeming (burning) their tokens in return for ETH. ETH within the treasury is evenly distributed to shareholders based on the amount of tokens they hold. Users can also choose to continue trading their tokens instead of redeeming them for the ETH within the treasury.
-
+At any point in time shareholders can redeem their shares for an allocation of their percentage of the tokens treasury.
 
 
 ## Protocol Revenue
